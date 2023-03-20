@@ -8,6 +8,7 @@ import {Owner} from 'src/app/dto/owner';
 import {Sex} from 'src/app/dto/sex';
 import {HorseService} from 'src/app/service/horse.service';
 import {OwnerService} from 'src/app/service/owner.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 
 export enum HorseCreateEditMode {
@@ -44,6 +45,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create New Horse';
+      case HorseCreateEditMode.edit:
+        return 'Update Horse';
       default:
         return '?';
     }
@@ -53,6 +56,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create';
+      case HorseCreateEditMode.edit:
+        return 'Update';
       default:
         return '?';
     }
@@ -67,6 +72,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'created';
+      case HorseCreateEditMode.edit:
+        return 'updated';
       default:
         return '?';
     }
@@ -79,6 +86,28 @@ export class HorseCreateEditComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
+
+      if (this.mode === HorseCreateEditMode.edit) {
+        const horseId = Number(this.route.snapshot.paramMap.get('id'));
+
+        if (Number.isNaN(horseId)) {
+          console.error('horse id is not a number', horseId);
+          this.notification.error('horse id is not a number');
+          this.router.navigate(['/horses']);
+        }
+
+        this.service.get(horseId).subscribe({
+
+          next: horse => {
+            this.horse = horse;
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            console.error('ERROR: No horse found with id:', horseId);
+            this.notification.error(`Could not find horse to edit`);
+            this.routToRoot();
+          }
+        });
+      }
     });
   }
 
@@ -109,6 +138,9 @@ export class HorseCreateEditComponent implements OnInit {
         case HorseCreateEditMode.create:
           observable = this.service.create(this.horse);
           break;
+        case HorseCreateEditMode.edit:
+          observable = this.service.update(this.horse);
+          break;
         default:
           console.error('Unknown HorseCreateEditMode', this.mode);
           return;
@@ -119,11 +151,15 @@ export class HorseCreateEditComponent implements OnInit {
           this.router.navigate(['/horses']);
         },
         error: error => {
+          this.notification.error(`Error while creating ${this.horse.name}: ${error.error.errors}`);
           console.error('Error creating horse', error);
-          // TODO show an error message to the user. Include and sensibly present the info from the backend!
         }
       });
     }
+  }
+
+  private routToRoot(): void {
+    this.router.navigate(['/horses']);
   }
 
 }

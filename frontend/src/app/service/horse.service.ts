@@ -39,4 +39,28 @@ export class HorseService {
     );
   }
 
+  /**
+   * Update parameters of an existing horese
+   *
+   * @param horse data to update
+   * @return an Observable of the updated horse
+   */
+  update(horse: Horse): Observable<Horse> {
+    return this.http.put<Horse>(
+      `${baseUri}/${horse.id}`,
+      horse
+    );
+  }
+
+  /**
+   * Gat an existing horse by its
+   *
+   * @param id the id by witch the horse is referenced
+   * @return an Observable of the horse
+   */
+  get(id: number): Observable<Horse> {
+    return this.http.get<Horse>(
+      `${baseUri}/${id}`
+    );
+  }
 }
