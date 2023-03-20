@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.service;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
@@ -43,4 +44,14 @@ public interface HorseService {
    * @throws NotFoundException if the horse with the given ID does not exist in the persistent data store
    */
   HorseDetailDto getById(long id) throws NotFoundException;
+
+  /**
+   * Create a new horse in the horse table.
+   * The attributes name date_of_birth and sex are mandatory.
+   *
+   * @param horse the horse ho be added in the table
+   * @return the added horse
+   * @throws ValidationException if the validation failed
+   */
+  HorseDetailDto create(HorseCreateDto horse) throws ValidationException;
 }

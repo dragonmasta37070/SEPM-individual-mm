@@ -14,6 +14,17 @@ public class Horse {
   private Sex sex;
   private Long ownerId;
 
+  public Horse() {
+  }
+
+  public Horse(String name, String description, LocalDate dateOfBirth, Sex sex, Long ownerId) {
+    this.name = name;
+    this.description = description;
+    this.dateOfBirth = dateOfBirth;
+    this.sex = sex;
+    this.ownerId = ownerId;
+  }
+
   public Long getId() {
     return id;
   }

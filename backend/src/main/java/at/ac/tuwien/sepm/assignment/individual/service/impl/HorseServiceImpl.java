@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
@@ -12,15 +13,16 @@ import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HorseServiceImpl implements HorseService {
@@ -76,6 +78,16 @@ public class HorseServiceImpl implements HorseService {
         ownerMapForSingleId(horse.getOwnerId()));
   }
 
+  @Override
+  public HorseDetailDto create(HorseCreateDto horseToCreate) throws ValidationException {
+    LOG.trace("create{()}", horseToCreate);
+    validator.validateNewHorse(horseToCreate);
+    Horse horse = dao.create(horseToCreate);
+
+    return mapper.entityToDetailDto(
+            horse,
+            ownerMapForSingleId(horse.getOwnerId()));
+  }
 
   private Map<Long, OwnerDto> ownerMapForSingleId(Long ownerId) {
     try {
