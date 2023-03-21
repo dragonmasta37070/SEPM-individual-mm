@@ -158,6 +158,21 @@ export class HorseCreateEditComponent implements OnInit {
     }
   }
 
+  public onDelete(): void {
+    if (!this.modeIsCreate && this.horse.id != null) {
+      this.service.delete(this.horse.id).subscribe({
+        next: () => {
+          this.notification.success(`Horse ${this.horse.name} was deleted successfully`);
+          this.routToRoot();
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.notification.error(`Error while deleting horse: ${errorResponse.error.errors}`)
+          console.error(`ERROR while deleting horse with id: ${this.horse.id}`, errorResponse.error.errors)
+        }
+      });
+    }
+  }
+
   private routToRoot(): void {
     this.router.navigate(['/horses']);
   }

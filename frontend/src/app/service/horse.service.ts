@@ -1,9 +1,8 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Horse} from '../dto/horse';
-import {Sex} from '../dto/sex';
 
 const baseUri = environment.backendUrl + '/horses';
 
@@ -60,6 +59,12 @@ export class HorseService {
    */
   get(id: number): Observable<Horse> {
     return this.http.get<Horse>(
+      `${baseUri}/${id}`
+    );
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(
       `${baseUri}/${id}`
     );
   }

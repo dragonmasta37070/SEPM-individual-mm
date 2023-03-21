@@ -3,6 +3,7 @@ import {ToastrService} from 'ngx-toastr';
 import {HorseService} from 'src/app/service/horse.service';
 import {Horse} from '../../dto/horse';
 import {Owner} from '../../dto/owner';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-horse',
@@ -38,6 +39,18 @@ export class HorseComponent implements OnInit {
           this.notification.error(errorMessage, 'Could Not Fetch Horses');
         }
       });
+  }
+
+  delete(id: number): void {
+    this.service.delete(id).subscribe({next: () => {
+        this.reloadHorses();
+        this.notification.info('Horse was deleted successfully');
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notification.error(`Error while deleting horse: ${errorResponse.error.errors}`)
+        console.error(`ERROR while deleting horse with id: ${id}`, errorResponse.error.errors)
+      }
+    });
   }
 
   ownerName(owner: Owner | null): string {

@@ -3,7 +3,9 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+
 import java.util.List;
 
 /**
@@ -46,4 +48,6 @@ public interface HorseDao {
    * @return a copy of the created horse
    */
   Horse create(HorseCreateDto horse);
+
+  void delete(long id) throws NotFoundException, FatalException;
 }
