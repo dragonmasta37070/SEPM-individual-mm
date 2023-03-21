@@ -41,6 +41,7 @@ public class HorseJdbcDao implements HorseDao {
       + " (name, description, date_of_birth, sex, owner_id)"
       + " VALUES (?, ?, ?, ?, ?)";
 
+  private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public HorseJdbcDao(
@@ -125,6 +126,17 @@ public class HorseJdbcDao implements HorseDao {
         ;
   }
 
+  @Override
+  public void delete(long id) throws NotFoundException, FatalException {
+    LOG.trace("delete ({})");
+    int updated = jdbcTemplate.update(SQL_DELETE, id);
+
+    if (updated == 0) {
+      throw new NotFoundException("Could not update delete with ID " + id + ", because it does not exist");
+    } else if (updated > 1) {
+      throw new FatalException("Deleted more than one row. This should never happen");
+    }
+  }
 
   private Horse mapRow(ResultSet result, int rownum) throws SQLException {
     return new Horse()
