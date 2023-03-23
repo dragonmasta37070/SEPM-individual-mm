@@ -20,7 +20,7 @@ public class HorseValidator {
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
-  public void validateForUpdate(HorseDetailDto horse, HorseListDto father, HorseListDto mother) throws ValidationException, ConflictException {
+  public void validateForUpdate(HorseDetailDto horse) throws ValidationException, ConflictException {
     LOG.trace("validateForUpdate({})", horse);
     List<String> validationErrors = new ArrayList<>();
 
@@ -29,8 +29,8 @@ public class HorseValidator {
     }
     validationErrors.addAll(validateString(horse.name(), 255, "Horse name", false));
     validationErrors.addAll(validateString(horse.description(), 4095, "Horse description", true));
-    validationErrors.addAll(validateDateOfBirth(horse.dateOfBirth(), father, mother));
-    validationErrors.addAll(validateSex(horse.sex(), father, mother));
+    validationErrors.addAll(validateDateOfBirth(horse.dateOfBirth(), horse.father(), horse.mother()));
+    validationErrors.addAll(validateSex(horse.sex(), horse.father(), horse.mother()));
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for update failed", validationErrors);
@@ -95,13 +95,13 @@ public class HorseValidator {
       validationErrors.add("Date of birth of horse is after the current date");
     }
     if (father != null) {
-      if (father.dateOfBirth().isBefore(dateOfBirthHorse)) {
-        validationErrors.add("Date of birth of Father is before date of birth of child");
+      if (father.dateOfBirth().isAfter(dateOfBirthHorse)) {
+        validationErrors.add("Date of birth of Father is after date of birth of child");
       }
     }
     if (mother != null) {
-      if (mother.dateOfBirth().isBefore(dateOfBirthHorse)) {
-        validationErrors.add("Date of birth of Father is before date of birth of child");
+      if (mother.dateOfBirth().isAfter(dateOfBirthHorse)) {
+        validationErrors.add("Date of birth of Father is after date of birth of child");
       }
     }
 

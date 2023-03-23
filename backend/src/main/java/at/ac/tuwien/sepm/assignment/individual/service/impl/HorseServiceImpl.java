@@ -65,9 +65,7 @@ public class HorseServiceImpl implements HorseService {
     Horse father = horse.father() == null ? null : dao.getById(horse.father().id());
     Horse mother = horse.mother() == null ? null : dao.getById(horse.mother().id());
 
-    HorseListDto fatherListDto = father == null ? null : mapper.entityToListDto(father, ownerMapForSingleId(father.getOwnerId()));
-    HorseListDto motherListDto = mother == null ? null : mapper.entityToListDto(mother, ownerMapForSingleId(mother.getOwnerId()));
-    validator.validateForUpdate(horse, fatherListDto, motherListDto);
+    validator.validateForUpdate(horse);
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(
         updatedHorse,

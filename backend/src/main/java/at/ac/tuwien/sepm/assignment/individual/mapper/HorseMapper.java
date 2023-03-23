@@ -69,8 +69,8 @@ public class HorseMapper {
         horse.getDateOfBirth(),
         horse.getSex(),
         getOwner(horse, owners),
-        entityToListDto(father, owners),
-        entityToListDto(mother, owners)
+        father == null ? null : entityToListDto(father, owners),
+        mother == null ? null : entityToListDto(mother, owners)
     );
   }
 
