@@ -54,7 +54,7 @@ public interface HorseService {
    * @return the added horse
    * @throws ValidationException if the validation failed
    */
-  HorseDetailDto create(HorseCreateDto horse) throws ValidationException;
+  HorseDetailDto create(HorseCreateDto horse) throws ValidationException, NotFoundException;
 
   /**
    * Deletes a horse by its id

@@ -61,32 +61,55 @@ public class HorseServiceImpl implements HorseService {
   @Override
   public HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException {
     LOG.trace("update({})", horse);
-    validator.validateForUpdate(horse);
+
+    Horse father = horse.father() == null ? null : dao.getById(horse.father().id());
+    Horse mother = horse.mother() == null ? null : dao.getById(horse.mother().id());
+
+    HorseListDto fatherListDto = father == null ? null : mapper.entityToListDto(father, ownerMapForSingleId(father.getOwnerId()));
+    HorseListDto motherListDto = mother == null ? null : mapper.entityToListDto(mother, ownerMapForSingleId(mother.getOwnerId()));
+    validator.validateForUpdate(horse, fatherListDto, motherListDto);
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(
         updatedHorse,
-        ownerMapForSingleId(updatedHorse.getOwnerId()));
+        ownerMapForSingleId(updatedHorse.getOwnerId()),
+        father,
+        mother
+    );
   }
-
 
   @Override
   public HorseDetailDto getById(long id) throws NotFoundException {
     LOG.trace("details({})", id);
     Horse horse = dao.getById(id);
+
+    Horse father = horse.getFatherId() == null ? null : dao.getById(horse.getFatherId());
+    Horse mother = horse.getMotherId() == null ? null : dao.getById(horse.getMotherId());
+
     return mapper.entityToDetailDto(
         horse,
-        ownerMapForSingleId(horse.getOwnerId()));
+        ownerMapForSingleId(horse.getOwnerId()),
+        father,
+        mother);
   }
 
   @Override
-  public HorseDetailDto create(HorseCreateDto horseToCreate) throws ValidationException {
+  public HorseDetailDto create(HorseCreateDto horseToCreate) throws ValidationException, NotFoundException {
     LOG.trace("create{()}", horseToCreate);
-    validator.validateNewHorse(horseToCreate);
+
+    Horse father = horseToCreate.fatherId() == null ? null : dao.getById(horseToCreate.fatherId());
+    Horse mother = horseToCreate.motherId() == null ? null : dao.getById(horseToCreate.motherId());
+
+    HorseListDto fatherListDto = father == null ? null : mapper.entityToListDto(father, ownerMapForSingleId(father.getOwnerId()));
+    HorseListDto motherListDto = mother == null ? null : mapper.entityToListDto(mother, ownerMapForSingleId(mother.getOwnerId()));
+
+    validator.validateNewHorse(horseToCreate, fatherListDto, motherListDto);
     Horse horse = dao.create(horseToCreate);
 
     return mapper.entityToDetailDto(
-            horse,
-            ownerMapForSingleId(horse.getOwnerId()));
+        horse,
+        ownerMapForSingleId(horse.getOwnerId()),
+        father,
+        mother);
   }
 
   @Override

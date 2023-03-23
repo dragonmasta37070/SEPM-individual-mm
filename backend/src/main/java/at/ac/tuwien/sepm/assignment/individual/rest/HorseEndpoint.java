@@ -73,7 +73,7 @@ public class HorseEndpoint {
 
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)
-  public HorseDetailDto create(@RequestBody HorseCreateDto toCreate) throws ConflictException {
+  public HorseDetailDto create(@RequestBody HorseCreateDto toCreate) throws ConflictException, NotFoundException {
     LOG.info("POST " + BASE_PATH + "/{}", toCreate);
     LOG.debug("Body of request:\n{}", toCreate);
     try {
@@ -82,6 +82,8 @@ public class HorseEndpoint {
       HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
       logClientError(status, "Horse input incomplete or incorrect", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
+    } catch (NotFoundException e) {
+      throw new NotFoundException("Mother or father not found", e);
     }
   }
 
