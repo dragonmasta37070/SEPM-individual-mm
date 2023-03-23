@@ -35,6 +35,7 @@ export class HorseCreateEditComponent implements OnInit {
   constructor(
     private service: HorseService,
     private ownerService: OwnerService,
+    private horseService: HorseService,
     private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
@@ -83,6 +84,14 @@ export class HorseCreateEditComponent implements OnInit {
     ? of([])
     : this.ownerService.searchByName(input, 5);
 
+  motherSuggestions = (input: string) => (input === '')
+    ? of([])
+    : this.horseService.searchByNameAndSex(input, 5, Sex.female);
+
+  fatherSuggestions = (input: string) => (input === '')
+    ? of([])
+    : this.horseService.searchByNameAndSex(input, 5, Sex.male);
+
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
@@ -126,6 +135,11 @@ export class HorseCreateEditComponent implements OnInit {
       : `${owner.firstName} ${owner.lastName}`;
   }
 
+  public formatParentName(parent: Horse | null | undefined): string {
+    return (parent == null)
+      ? ''
+      : `${parent.name}`;
+  }
 
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.horse);

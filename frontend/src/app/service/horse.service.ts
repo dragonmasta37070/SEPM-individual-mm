@@ -1,8 +1,10 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import {Horse} from '../dto/horse';
+import {Owner} from "../dto/owner";
+import {Sex} from "../dto/sex";
 
 const baseUri = environment.backendUrl + '/horses';
 
@@ -63,9 +65,19 @@ export class HorseService {
     );
   }
 
+  //TODO COMMENT!
   delete(id: number): Observable<void> {
     return this.http.delete<void>(
       `${baseUri}/${id}`
     );
+  }
+
+  public searchByNameAndSex(name: string, limitTo: number, sex: Sex): Observable<Horse[]> {
+    const params = new HttpParams()
+      .set('name', name)
+      .set('maxAmount', limitTo)
+      .set('sex', sex);
+    //TODO this will be implemented later
+    return this.http.get<Horse[]>(baseUri, { params });
   }
 }
