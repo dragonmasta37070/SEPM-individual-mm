@@ -54,7 +54,7 @@ export class HorseService {
   }
 
   /**
-   * Gat an existing horse by its
+   * Get an existing horse by its id
    *
    * @param id the id by witch the horse is referenced
    * @return an Observable of the horse
@@ -65,13 +65,25 @@ export class HorseService {
     );
   }
 
-  //TODO COMMENT!
+  /**
+   * Delete a horse by its id
+   *
+   * @param id he id by witch the horse is referenced
+   */
   delete(id: number): Observable<void> {
     return this.http.delete<void>(
       `${baseUri}/${id}`
     );
   }
 
+  /**
+   * Search horses by there name and sex
+   * @param name name to search for
+   * @param limitTo limits the number of returned horses
+   * @param sex sex to search for
+   *
+   * @return horses with matching values
+   */
   public searchByNameAndSex(name: string, limitTo: number, sex: Sex): Observable<Horse[]> {
     const params = new HttpParams()
       .set('name', name)
