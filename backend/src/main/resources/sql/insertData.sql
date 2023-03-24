@@ -28,6 +28,9 @@ INSERT INTO horse (id, name, description, date_of_birth, sex, mother_id)
 VALUES (-7, 'Peter', 'child of Wendisch', '2020-12-12', 'FEMALE', -3)
 ;
 
+DELETE
+FROM owner
+where id < 0;
 
 INSERT INTO owner (id, FIRST_NAME, LAST_NAME, EMAIL)
 VALUES (-1, 'Eragon', 'Schattentöter', 'erscha@gmail.com' )
