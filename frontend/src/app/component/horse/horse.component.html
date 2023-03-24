@@ -31,7 +31,7 @@
   </a>
 </div>
 
-<form (submit)="reloadHorses()" class="d-flex flex-row w-auto mb-3">
+<form #form="ngForm" (submit)="reloadHorses()" class="d-flex flex-row w-auto mb-3">
   <!-- this button is here, just so that simple submitting of this form
        to reload the horses, is possible -->
   <button hidden="true" type="submit">submit</button>
@@ -39,7 +39,10 @@
     <label class="col-form-label" for="searchHorseName">
       Name
     </label>
-    <input class="form-control" id="searchHorseName" name="searchHorseName"
+    <input [(ngModel)]="search.name"
+           class="form-control"
+           id="searchHorseName"
+           name="searchHorseName"
            type="text"
     >
   </div>
@@ -47,7 +50,10 @@
     <label class="col-form-label" for="searchHorseDescription">
       Description
     </label>
-    <input class="form-control" id="searchHorseDescription" name="searchHorseDescription"
+    <input [(ngModel)]="search.description"
+           class="form-control"
+           id="searchHorseDescription"
+           name="searchHorseDescription"
            type="text"
     >
   </div>
@@ -58,7 +64,10 @@
     <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
          The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
       -->
-    <input class="form-control" id="searchHorseDateOfBirth" name="searchHorseDateOfBirth"
+    <input [(ngModel)]="search.bornBefore"
+           class="form-control"
+           id="searchHorseDateOfBirth"
+           name="searchHorseDateOfBirth"
            pattern="\d{4}-\d{2}-\d{2}"
            placeholder="yyyy-mm-dd"
            type="date"
@@ -68,7 +77,9 @@
     <label class="col-form-label" for="searchHorseSex">
       Sex
     </label>
-    <select id="searchHorseSex" class="form-select"
+    <select [(ngModel)]="search.sex"
+            class="form-select"
+            id="searchHorseSex"
             name="searchHorseSex"
     >
       <option></option>
@@ -80,7 +91,8 @@
     <label class="col-form-label" for="searchHorseOwner">
       Owner
     </label>
-    <app-autocomplete id="searchHorseOwner"
+    <app-autocomplete [(ngModel)]="search.owner"
+                      id="searchHorseOwner"
                       name="searchHorseOwner"
                       textInputClass="form-control"
                       valueNeedsToMatchSuggestion="false"
