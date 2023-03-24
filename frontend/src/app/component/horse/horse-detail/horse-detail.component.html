@@ -1,1 +1,102 @@
-<p>horse-detail works!</p>
+<div class="d-flex justify-content-between align-items-end pb-4">
+  <h1 class="display-1">Details of Horse</h1>
+  <ng-container>
+    <a
+      [routerLink]="['../../edit', horse.id]"
+      aria-label="Show horse details"
+      class="btn btn-sm responsive-warning-button"
+    >
+      <i class="bi bi-pencil mr-2"></i>
+      Edit
+    </a>
+  </ng-container>
+</div>
+
+
+<div class="row">
+  <!-- Start name and date of birth row -->
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Name
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8" id="horseName">
+        {{horse.name}}
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Date of Birth
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8">
+        {{horse.dateOfBirth}}
+      </div>
+    </div>
+  </div>
+  <!-- End name and date of birth row -->
+</div>
+<div class="row">
+  <!-- Start ex and owner row -->
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Sex
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8">
+        {{horse.sex}}
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Owner
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8">
+        {{horse.owner}}
+      </div>
+    </div>
+  </div>
+  <!-- End sex and owner row -->
+</div>
+<div class="row">
+  <!-- Start parent row -->
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Mother
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8">
+        {{horse.mother.name}}
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 col-lg-6">
+    <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+    <div class="row">
+      <div class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+        Father
+      </div>
+      <div class="col-form-label col-md-10 col-lg-8">
+        {{horse.father.name}}
+      </div>
+    </div>
+  </div>
+  <!-- End parent row -->
+</div>
+<div class="row">
+  <!-- No row and col-* here. We want this to always span the whole width. -->
+  <div class="col-form-label text-md-end text-md-end text-muted col-md-2">
+    Description
+  </div>
+  <div class="col-md-10 col-form-label">
+    {{horse.description}}
+  </div>
+</div>

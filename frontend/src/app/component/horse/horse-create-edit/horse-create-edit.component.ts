@@ -14,7 +14,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 export enum HorseCreateEditMode {
   create,
   edit,
-};
+}
 
 @Component({
   selector: 'app-horse-create-edit',
@@ -33,7 +33,6 @@ export class HorseCreateEditComponent implements OnInit {
 
 
   constructor(
-    private service: HorseService,
     private ownerService: OwnerService,
     private horseService: HorseService,
     private router: Router,
@@ -105,7 +104,7 @@ export class HorseCreateEditComponent implements OnInit {
           this.router.navigate(['/horses']);
         }
 
-        this.service.get(horseId).subscribe({
+        this.horseService.get(horseId).subscribe({
 
           next: horse => {
             this.horse = horse;
@@ -150,10 +149,10 @@ export class HorseCreateEditComponent implements OnInit {
       let observable: Observable<Horse>;
       switch (this.mode) {
         case HorseCreateEditMode.create:
-          observable = this.service.create(this.horse);
+          observable = this.horseService.create(this.horse);
           break;
         case HorseCreateEditMode.edit:
-          observable = this.service.update(this.horse);
+          observable = this.horseService.update(this.horse);
           break;
         default:
           console.error('Unknown HorseCreateEditMode', this.mode);
@@ -174,7 +173,7 @@ export class HorseCreateEditComponent implements OnInit {
 
   public onDelete(): void {
     if (!this.modeIsCreate && this.horse.id != null) {
-      this.service.delete(this.horse.id).subscribe({
+      this.horseService.delete(this.horse.id).subscribe({
         next: () => {
           this.notification.success(`Horse ${this.horse.name} was deleted successfully`);
           this.routToRoot();
