@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
@@ -20,11 +21,18 @@ public interface HorseDao {
    */
   List<Horse> getAll();
 
+  /**
+   * get a list of horses, which meet specific parameters
+   *
+   * @param filter patterns by which are filtered
+   * @return a list of horses, which meet the parameters specified in the searchPatterns
+   */
+  List<Horse> searchHorses(HorseSearchDto filter);
 
   /**
    * Update the horse with the ID given in {@code horse}
-   *  with the data given in {@code horse}
-   *  in the persistent data store.
+   * with the data given in {@code horse}
+   * in the persistent data store.
    *
    * @param horse the horse to update
    * @return the updated horse

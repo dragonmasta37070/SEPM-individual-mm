@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.service.impl;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -43,6 +45,17 @@ public class HorseServiceImpl implements HorseService {
   public Stream<HorseListDto> allHorses() {
     LOG.trace("allHorses()");
     var horses = dao.getAll();
+    return getHorseListDtoStream(horses);
+  }
+
+  @Override
+  public Stream<HorseListDto> searchHorses(HorseSearchDto searchParameters) {
+    LOG.trace("searchHorses({})", searchParameters);
+    var horses = dao.searchHorses(searchParameters);
+    return getHorseListDtoStream(horses);
+  }
+
+  private Stream<HorseListDto> getHorseListDtoStream(List<Horse> horses) {
     var ownerIds = horses.stream()
         .map(Horse::getOwnerId)
         .filter(Objects::nonNull)
@@ -56,7 +69,6 @@ public class HorseServiceImpl implements HorseService {
     return horses.stream()
         .map(horse -> mapper.entityToListDto(horse, ownerMap));
   }
-
 
   @Override
   public HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException {

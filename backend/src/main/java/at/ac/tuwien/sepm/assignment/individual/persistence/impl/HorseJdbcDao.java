@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
@@ -58,6 +59,34 @@ public class HorseJdbcDao implements HorseDao {
   }
 
   @Override
+  public List<Horse> searchHorses(HorseSearchDto filter) {
+    LOG.trace("search()");
+    String query = "SELECT * FROM " + TABLE_NAME + " WHERE 1=1";
+
+    if (filter.name() != null) {
+      query += " AND LOWER(name) like LOWER('%" + filter.name() + "%')";
+    }
+    if (filter.description() != null) {
+      query += " AND LOWER(description) like LOWER('%" + filter.description() + "%')";
+    }
+    if (filter.sex() != null) {
+      query += " AND sex = '" + filter.sex() + "'";
+    }
+    if (filter.bornBefore() != null) {
+      query += " AND date_of_birth <= '" + filter.bornBefore() + "'";
+    }
+    if (filter.ownerName() != null) {
+      query += " AND owner_id IN (SELECT * FROM owners WHERE first_name LIKE LOWER('%" + filter.ownerName()
+          + "%') OR last_name LIKE LOWER('%" + filter.ownerName() + "%')";
+    }
+    if (filter.limit() != null) {
+      query += " LIMIT " + filter.limit();
+    }
+
+    return jdbcTemplate.query(query, this::mapRow);
+  }
+
+  @Override
   public Horse getById(long id) throws NotFoundException {
     LOG.trace("getById({})", id);
     List<Horse> horses;
@@ -108,6 +137,7 @@ public class HorseJdbcDao implements HorseDao {
         .setMotherId(horse.motherId());
   }
 
+  //TODO: manage gender change of parent
   @Override
   public Horse update(HorseDetailDto horse) throws NotFoundException {
     LOG.trace("update({})", horse);
