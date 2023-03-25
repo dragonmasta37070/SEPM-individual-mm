@@ -16,10 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class HorseValidator {
+public class HorseValidator extends BaseValidator {
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-
+  /**
+   * Validates the attributes of a horse, which is to be updated
+   *
+   * @param horse the horse to bew validated
+   * @throws ValidationException if one of the validations fails
+   */
   public void validateForUpdate(HorseDetailDto horse) throws ValidationException, ConflictException {
     LOG.trace("validateForUpdate({})", horse);
     List<String> validationErrors = new ArrayList<>();
@@ -27,24 +32,33 @@ public class HorseValidator {
     if (horse.id() == null) {
       validationErrors.add("No ID given");
     }
-    validationErrors.addAll(validateString(horse.name(), 255, "Horse name", false));
-    validationErrors.addAll(validateString(horse.description(), 4095, "Horse description", true));
-    validationErrors.addAll(validateDateOfBirth(horse.dateOfBirth(), horse.father(), horse.mother()));
-    validationErrors.addAll(validateSex(horse.sex(), horse.father(), horse.mother()));
+
+    validateString(validationErrors, horse.name(), 255, "Horse name", false);
+    validateString(validationErrors, horse.description(), 4095, "Horse description", true);
+    validateDateOfBirth(validationErrors, horse.dateOfBirth(), horse.father(), horse.mother());
+    validateSex(validationErrors, horse.sex(), horse.father(), horse.mother());
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for update failed", validationErrors);
     }
   }
 
+  /**
+   * Validates the attributes of a horse, which is to be inserted in the DB
+   *
+   * @param horse  the horse to bew validated
+   * @param father the horse which should be the father of the horse
+   * @param mother the horse which should be the mother of the horse
+   * @throws ValidationException if one of the validations fails
+   */
   public void validateNewHorse(HorseCreateDto horse, HorseListDto father, HorseListDto mother) throws ValidationException {
     LOG.trace("validateNewHorse({})", horse);
     List<String> validationErrors = new ArrayList<>();
 
-    validationErrors.addAll(validateString(horse.name(), 255, "New horse name", false));
-    validationErrors.addAll(validateString(horse.description(), 4095, "New horse description", true));
-    validationErrors.addAll(validateDateOfBirth(horse.dateOfBirth(), father, mother));
-    validationErrors.addAll(validateSex(horse.sex(), father, mother));
+    validateString(validationErrors, horse.name(), 255, "New horse name", false);
+    validateString(validationErrors, horse.description(), 4095, "New horse description", true);
+    validateDateOfBirth(validationErrors, horse.dateOfBirth(), father, mother);
+    validateSex(validationErrors, horse.sex(), father, mother);
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for create failed", validationErrors);
@@ -52,43 +66,14 @@ public class HorseValidator {
   }
 
   /**
-   * validates if a string is present and has the right length
-   *
-   * @param toVal      String to validate
-   * @param maxLen     Max length of String
-   * @param stringName Name of the String for error message
-   * @param nullValid  If the String can be null
-   * @return possible errors
-   */
-  private List<String> validateString(String toVal, int maxLen, String stringName, Boolean nullValid) {
-    List<String> validationErrors = new ArrayList<>();
-
-    if (toVal == null) {
-      if (!nullValid) {
-        validationErrors.add(stringName + " is missing");
-      }
-    } else {
-      if (toVal.isBlank()) {
-        validationErrors.add(stringName + " is given but blank");
-      }
-      if (toVal.length() > maxLen) {
-        validationErrors.add(stringName + " too long: longer than 4095 characters");
-      }
-    }
-    return validationErrors;
-  }
-
-  /**
    * validates if date of birth of parents is after the date of birth of the child
    *
+   * @param validationErrors list of errors to add to
    * @param dateOfBirthHorse date of Birth of horse
    * @param father           HorseListDte of father
    * @param mother           HorseListDte of mother
-   * @return possible errors
    */
-  private static List<String> validateDateOfBirth(LocalDate dateOfBirthHorse, HorseListDto father, HorseListDto mother) {
-    List<String> validationErrors = new ArrayList<>();
-
+  private void validateDateOfBirth(List<String> validationErrors, LocalDate dateOfBirthHorse, HorseListDto father, HorseListDto mother) {
     if (dateOfBirthHorse == null) {
       validationErrors.add("Date of birth of horse missing");
     } else if (dateOfBirthHorse.isAfter(LocalDate.now())) {
@@ -104,21 +89,17 @@ public class HorseValidator {
         validationErrors.add("Date of birth of Father is after date of birth of child");
       }
     }
-
-    return validationErrors;
   }
 
   /**
    * validates sex horse and its parents if present
    *
-   * @param horseSex sex of horse
-   * @param father   HorseListDto of father
-   * @param mother   HorseListDto of mother
-   * @return possible errors
+   * @param validationErrors list of errors to add to
+   * @param horseSex         sex of horse
+   * @param father           HorseListDto of father
+   * @param mother           HorseListDto of mother
    */
-  private static List<String> validateSex(Sex horseSex, HorseListDto father, HorseListDto mother) {
-    List<String> validationErrors = new ArrayList<>();
-
+  private void validateSex(List<String> validationErrors, Sex horseSex, HorseListDto father, HorseListDto mother) {
     if (horseSex == null) {
       validationErrors.add("Sex of horse missing");
     }
@@ -128,7 +109,5 @@ public class HorseValidator {
     if (mother != null && mother.sex() != Sex.FEMALE) {
       validationErrors.add("Sex of father is not female");
     }
-
-    return validationErrors;
   }
 }

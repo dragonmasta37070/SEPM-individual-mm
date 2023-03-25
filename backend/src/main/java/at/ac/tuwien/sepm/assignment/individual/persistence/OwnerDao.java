@@ -4,7 +4,9 @@ import at.ac.tuwien.sepm.assignment.individual.dto.OwnerCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Data Access Object for owners.
@@ -19,6 +21,14 @@ public interface OwnerDao {
    * @throws NotFoundException if no owner with the given ID exists in the persistent data store
    */
   Owner getById(long id) throws NotFoundException;
+
+  /**
+   * Fetch an owner from the persistent data store by its MAIL.
+   *
+   * @param mail the mail of the owner to get
+   * @return the owner with the mail if present
+   */
+  Optional<Owner> getByMail(String mail);
 
   /**
    * Fetch a set of owners by their IDs from the persistent data store.

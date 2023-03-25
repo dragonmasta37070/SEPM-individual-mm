@@ -6,6 +6,13 @@ import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
+
 import java.lang.invoke.MethodHandles;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,12 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 @Repository
 public class OwnerJdbcDao implements OwnerDao {
@@ -32,6 +34,7 @@ public class OwnerJdbcDao implements OwnerDao {
       + " WHERE UPPER(first_name||' '||last_name) like UPPER('%'||COALESCE(?, '')||'%')";
   private static final String SQL_SELECT_SEARCH_LIMIT_CLAUSE = " LIMIT ?";
   private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (first_name, last_name, email) VALUES (?, ?, ?)";
+  private static final String SQL_SELECT_BY_MAIL = "SELECT * FROM " + TABLE_NAME + " WHERE email = ?";
 
   private final JdbcTemplate jdbcTemplate;
   private final NamedParameterJdbcTemplate jdbcNamed;
@@ -54,6 +57,19 @@ public class OwnerJdbcDao implements OwnerDao {
       throw new FatalException("Found more than one owner with ID %d".formatted(id));
     }
     return owners.get(0);
+  }
+
+  @Override
+  public Optional<Owner> getByMail(String mail) {
+    List<Owner> owners = jdbcTemplate.query(SQL_SELECT_BY_MAIL, this::mapRow, mail);
+    if (owners.isEmpty()) {
+      return Optional.empty();
+    }
+    if (owners.size() > 1) {
+      // If this happens, something is wrong with either the DB or the select
+      throw new FatalException("Found more than one owner with ID %s".formatted(mail));
+    }
+    return Optional.ofNullable(owners.get(0));
   }
 
   @Override
