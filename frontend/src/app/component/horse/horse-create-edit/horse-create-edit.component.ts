@@ -101,7 +101,7 @@ export class HorseCreateEditComponent implements OnInit {
         if (Number.isNaN(horseId)) {
           console.error('horse id is not a number', horseId);
           this.notification.error('horse id is not a number');
-          this.router.navigate(['/horses']);
+          this.routToRoot();
         }
 
         this.horseService.get(horseId).subscribe({
@@ -161,7 +161,7 @@ export class HorseCreateEditComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.notification.success(`Horse ${this.horse.name} successfully ${this.modeActionFinished}.`);
-          this.router.navigate(['/horses']);
+          this.routToRoot();
         },
         error: error => {
           this.notification.error(`Error while creating ${this.horse.name}: ${error.error.errors}`);

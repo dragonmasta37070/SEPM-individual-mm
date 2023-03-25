@@ -7,6 +7,7 @@ import {
 import {HorseComponent} from './component/horse/horse.component';
 import {HorseDetailComponent} from "./component/horse/horse-detail/horse-detail.component";
 import {OwnerComponent} from "./component/owner/owner.component";
+import {OwnerCreateComponent} from "./component/owner/owner-create/owner-create.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'horses', pathMatch: 'full'},
@@ -21,6 +22,7 @@ const routes: Routes = [
   {
     path: 'owners', children: [
       {path: '', component: OwnerComponent, data: {}},
+      {path: 'create', component: OwnerCreateComponent, data: {}},
     ]
   },
   {path: '**', redirectTo: 'horses'},
