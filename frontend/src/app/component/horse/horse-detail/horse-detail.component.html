@@ -40,7 +40,7 @@
   <!-- End name and date of birth row -->
 </div>
 <div class="row">
-  <!-- Start ex and owner row -->
+  <!-- Start sex and owner row -->
   <div class="mb-2 col-lg-6">
     <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
     <div class="row">
@@ -59,7 +59,7 @@
         Owner
       </div>
       <div class="col-form-label col-md-10 col-lg-8">
-        {{horse.owner}}
+        {{horse.owner.firstName}} {{horse.owner.lastName}}
       </div>
     </div>
   </div>

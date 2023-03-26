@@ -106,8 +106,8 @@ public class HorseServiceImpl implements HorseService {
   public HorseDetailDto create(HorseCreateDto horseToCreate) throws ValidationException, NotFoundException {
     LOG.trace("create{()}", horseToCreate);
 
-    Horse father = horseToCreate.fatherId() == null ? null : dao.getById(horseToCreate.fatherId());
-    Horse mother = horseToCreate.motherId() == null ? null : dao.getById(horseToCreate.motherId());
+    Horse father = horseToCreate.father() == null ? null : dao.getById(horseToCreate.father().id());
+    Horse mother = horseToCreate.mother() == null ? null : dao.getById(horseToCreate.mother().id());
 
     HorseListDto fatherListDto = father == null ? null : mapper.entityToListDto(father, ownerMapForSingleId(father.getOwnerId()));
     HorseListDto motherListDto = mother == null ? null : mapper.entityToListDto(mother, ownerMapForSingleId(mother.getOwnerId()));

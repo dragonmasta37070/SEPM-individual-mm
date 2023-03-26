@@ -117,7 +117,7 @@
         <app-autocomplete
           [(ngModel)]="horse.mother"
           [formatModel]="formatParentName"
-          [suggestions]="fatherSuggestions"
+          [suggestions]="motherSuggestions"
           class="col-md-10 col-lg-8"
           id="mother"
           name="mother"
@@ -135,7 +135,7 @@
         <app-autocomplete
           [(ngModel)]="horse.father"
           [formatModel]="formatParentName"
-          [suggestions]="motherSuggestions"
+          [suggestions]="fatherSuggestions"
           class="col-md-10 col-lg-8"
           id="father"
           name="father"

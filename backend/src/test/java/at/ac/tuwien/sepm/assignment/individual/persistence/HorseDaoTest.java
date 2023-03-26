@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
+import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
+import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class HorseDaoTest {
 
   @Autowired
   HorseDao horseDao;
+
+  @Autowired
+  HorseMapper mapper;
 
   @Test
   public void getAllReturnsAllStoredHorses() {
@@ -47,9 +52,10 @@ public class HorseDaoTest {
   }
 
   @Test
-  public void createNewHorseAddsDataToTheDBwithParents() {
+  public void createNewHorseAddsDataToTheDBwithParents() throws NotFoundException {
     HorseCreateDto toCreate = new HorseCreateDto("Steve", "a crazy Horse",
-        LocalDate.now(), Sex.MALE, null, -2L, -1L);
+        LocalDate.now(), Sex.MALE, null, mapper.entityToListDto(horseDao.getById(-2L), null),
+        mapper.entityToListDto(horseDao.getById(-1L), null));
     horseDao.create(toCreate);
     List<Horse> horses = horseDao.getAll();
     assertThat(horses.size()).isGreaterThanOrEqualTo(1);

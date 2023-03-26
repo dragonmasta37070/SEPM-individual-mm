@@ -51,7 +51,7 @@ public class HorseServiceTest {
         () -> assertEquals(created.description(), validHorseData.description()),
         () -> assertEquals(created.dateOfBirth(), validHorseData.dateOfBirth()),
         () -> assertEquals(created.sex(), validHorseData.sex()),
-        () -> assertEquals(created.ownerId(), validHorseData.ownerId()),
+        () -> assertEquals(created.ownerId(), validHorseData.owner()),
         () -> assertEquals(created.father(), null),
         () -> assertEquals(created.mother(), null)
     );
@@ -67,8 +67,9 @@ public class HorseServiceTest {
 
   @Test
   public void create_whenGivenInvalidParent_shouldThrow() {
+    HorseListDto notExistingHorse = new HorseListDto(187L, "Max", "", LocalDate.now(), Sex.MALE, null);
     HorseCreateDto invalidHorseData = new HorseCreateDto("Invalidia", "has a birthday prediction",
-        LocalDate.now(), Sex.FEMALE, null, 187L, null);
+        LocalDate.now(), Sex.FEMALE, null, notExistingHorse, null);
     assertThrows(NotFoundException.class,
         () -> horseService.create(invalidHorseData));
   }

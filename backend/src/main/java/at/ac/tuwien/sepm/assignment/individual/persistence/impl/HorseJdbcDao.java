@@ -108,6 +108,9 @@ public class HorseJdbcDao implements HorseDao {
     LOG.trace("create({})", horse);
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
+    Long owenerId = horse.owner() == null ? null : horse.owner().id();
+    Long fatherId = horse.father() == null ? null : horse.father().id();
+    Long motherId = horse.mother() == null ? null : horse.mother().id();
 
     int updated = jdbcTemplate.update(
         connection -> {
@@ -116,9 +119,9 @@ public class HorseJdbcDao implements HorseDao {
           statement.setString(2, horse.description());
           statement.setDate(3, Date.valueOf(horse.dateOfBirth()));
           statement.setString(4, horse.sex().toString());
-          statement.setObject(5, horse.ownerId());
-          statement.setObject(6, horse.fatherId());
-          statement.setObject(7, horse.motherId());
+          statement.setObject(5, owenerId);
+          statement.setObject(6, fatherId);
+          statement.setObject(7, motherId);
           return statement;
         }, keyHolder);
 
@@ -132,9 +135,9 @@ public class HorseJdbcDao implements HorseDao {
         .setDescription(horse.description())
         .setDateOfBirth(horse.dateOfBirth())
         .setSex(horse.sex())
-        .setOwnerId(horse.ownerId())
-        .setFatherId(horse.fatherId())
-        .setMotherId(horse.motherId());
+        .setOwnerId(owenerId)
+        .setFatherId(fatherId)
+        .setMotherId(motherId);
   }
 
   //TODO: manage gender change of parent

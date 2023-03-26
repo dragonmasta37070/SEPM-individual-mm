@@ -28,7 +28,7 @@ public class HorseValidator extends BaseValidator {
   public void validateForUpdate(HorseDetailDto horse) throws ValidationException, ConflictException {
     LOG.trace("validateForUpdate({})", horse);
     List<String> validationErrors = new ArrayList<>();
-
+    // TODO: validate on gender change if still valid
     if (horse.id() == null) {
       validationErrors.add("No ID given");
     }
