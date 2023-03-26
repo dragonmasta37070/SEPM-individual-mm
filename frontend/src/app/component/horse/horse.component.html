@@ -120,6 +120,11 @@
       <td>{{ownerName(horse.owner)}}</td>
       <td>
         <div class="btn-group">
+          <a [routerLink]="['tree', horse.id]"
+             aria-label="Horse tree"
+             class="btn btn-sm responsive-info-button">
+            <i class="bi bi-list"></i>
+          </a>
           <a (click)="delete(horse.id)"
              aria-label="Delete horse"
              class="btn btn-sm responsive-danger-button">

@@ -1,1 +1,29 @@
-<p>horse-tree works!</p>
+<h1 class="display-1">Family Tree</h1>
+<div class="d-flex flex-row w-auto">
+  <button
+    class="btn btn-primary mr-1"
+    (click)="loadTree()"
+    aria-label="Load"
+  >
+    <i class="bi bi-arrow-clockwise"></i>
+    Load
+  </button>
+  <div class="ms-1">
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="generations"
+      placeholder="generations"
+      min="1"
+    />
+  </div>
+  <span style="flex: 1"></span>
+</div>
+
+<div>{{horse.name}}</div>
+<div class="mt-3 mb-3">
+  <app-horse-tree-node
+    *ngIf="horseTree$ | async as horseTree"
+    [horse]="horseTree">
+  </app-horse-tree-node>
+</div>

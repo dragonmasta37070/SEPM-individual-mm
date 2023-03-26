@@ -1,0 +1,37 @@
+<div class="border rounded expanded">
+
+  <i class="bi bi-chevron-down"></i>
+  <div>{{horse.name}} | {{horse.sex}}</div>
+  <div>
+    {{ horse.dateOfBirth | date : 'longDate' }}
+  </div>
+  <div class="btn-group">
+    <a (click)="delete(horse.id)"
+       aria-label="Delete horse"
+       class="btn btn-sm responsive-danger-button">
+      <i class="bi bi-trash"></i>
+    </a>
+    <a [routerLink]="['detail', horse.id]"
+       aria-label="Show horse details"
+       class="btn btn-sm responsive-info-button">
+      <i class="bi bi-info-lg"></i>
+    </a>
+    <a [routerLink]="['edit', horse.id]"
+       aria-label="Edit horse"
+       class="btn btn-sm responsive-warning-button">
+      <i class="bi bi-pencil"></i>
+    </a>
+  </div>
+  <div
+    class="tree-parents"
+  >
+    <app-horse-tree-node
+      *ngIf="horse && horse.mother"
+      [horse]="horse.mother"
+    ></app-horse-tree-node>
+    <app-horse-tree-node
+      *ngIf="horse && horse.father"
+      [horse]="horse.father"
+    ></app-horse-tree-node>
+  </div>
+</div>

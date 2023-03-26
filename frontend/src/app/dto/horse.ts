@@ -20,3 +20,12 @@ export interface HorseSearch {
   sex?: Sex;
   owner?: string;
 }
+
+export interface HorseTree {
+  id?: number;
+  name: string;
+  dateOfBirth: Date;
+  sex: Sex;
+  father?: Horse;
+  mother?: Horse;
+}
