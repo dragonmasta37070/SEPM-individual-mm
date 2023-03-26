@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseTreeDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
@@ -53,6 +54,15 @@ public class HorseServiceImpl implements HorseService {
     LOG.trace("searchHorses({})", searchParameters);
     var horses = dao.searchHorses(searchParameters);
     return getHorseListDtoStream(horses);
+  }
+
+  @Override
+  public HorseTreeDto getTree(Long id, Long generations) throws NotFoundException {
+    LOG.trace("searchHorses({},{})", id, generations);
+    validator.validateForTree(id, generations);
+
+    var tree = dao.getTreeAsList(id, generations);
+    return mapper.convertListToTree(tree, tree.get(0));
   }
 
   private Stream<HorseListDto> getHorseListDtoStream(List<Horse> horses) {

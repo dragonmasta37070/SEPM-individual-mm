@@ -57,5 +57,22 @@ public interface HorseDao {
    */
   Horse create(HorseCreateDto horse);
 
+  /**
+   * Deletes a horse determent by its ID
+   *
+   * @param id id of horse to delete
+   * @throws NotFoundException if the given id doeas not match an entry in the DB
+   * @throws FatalException if more than one wntry is found. (should never happen)
+   */
   void delete(long id) throws NotFoundException, FatalException;
+
+  /**
+   * get tree of ancestors as lost with a limit of generations
+   *
+   * @param id id of root node
+   * @param generations number od generations to be fetched
+   * @return the tree as a list
+   * @throws NotFoundException if the given id doeas not match an entry in the DB
+   */
+  List<Horse> getTreeAsList(long id, long generations) throws NotFoundException;
 }

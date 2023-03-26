@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseCreateDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseTreeDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
@@ -72,4 +73,13 @@ public interface HorseService {
    * @return a list of horses, which meet the parameters specified in the searchPatterns
    */
   Stream<HorseListDto> searchHorses(HorseSearchDto searchParameters);
+
+  /**
+   * get a tree representation of horses and there parents
+   *
+   * @param id root horse
+   * @param generations number of generations listed
+   * @return a tree of horses
+   */
+  HorseTreeDto getTree(Long id, Long generations) throws NotFoundException;
 }

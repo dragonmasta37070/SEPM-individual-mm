@@ -52,7 +52,7 @@ public class HorseValidator extends BaseValidator {
    * @throws ValidationException if one of the validations fails
    */
   public void validateNewHorse(HorseCreateDto horse, HorseListDto father, HorseListDto mother) throws ValidationException {
-    LOG.trace("validateNewHorse({})", horse);
+    LOG.trace("validateNewHorse({}, {}, {})", horse, father, mother);
     List<String> validationErrors = new ArrayList<>();
 
     validateString(validationErrors, horse.name(), 255, "New horse name", false);
@@ -108,6 +108,14 @@ public class HorseValidator extends BaseValidator {
     }
     if (mother != null && mother.sex() != Sex.FEMALE) {
       validationErrors.add("Sex of father is not female");
+    }
+  }
+
+  public void validateForTree(Long id, Long generations) {
+    LOG.trace("validateForTree ({}, {})", id, generations);
+    List<String> validationErrors = new ArrayList<>();
+    if (generations < 1) {
+      validationErrors.add("Generations cant be smaller than 1");
     }
   }
 }

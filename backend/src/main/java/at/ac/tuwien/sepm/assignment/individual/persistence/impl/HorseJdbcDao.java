@@ -43,6 +43,18 @@ public class HorseJdbcDao implements HorseDao {
   private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME
       + " (name, description, date_of_birth, sex, owner_id, father_id, mother_id)"
       + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+  private static final String SQL_GET_ANCESTORS = "SELECT *  FROM horse WHERE id IN ("
+      + " WITH ancestors (id, name, mother_id, father_id, generation) AS ("
+      + " SELECT id, name, father_id, mother_id, 1 AS generation"
+      + " FROM " + TABLE_NAME
+      + " WHERE id = ?"
+      + " UNION ALL"
+      + " SELECT h.id, h.name, h.father_id, h.mother_id, a.generation + 1"
+      + " FROM ancestors a"
+      + " JOIN horse h ON h.id = a.father_id OR h.id = a.mother_id"
+      + " WHERE a.generation < ?)"
+      + " SELECT DISTINCT id"
+      + " FROM ancestors);";
 
   private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
   private final JdbcTemplate jdbcTemplate;
@@ -179,6 +191,18 @@ public class HorseJdbcDao implements HorseDao {
     } else if (updated > 1) {
       throw new FatalException("Deleted more than one row. This should never happen");
     }
+  }
+
+  @Override
+  public List<Horse> getTreeAsList(long id, long generations) throws NotFoundException {
+    LOG.trace("getTreeAsList{},{}", id, generations);
+    List<Horse> treeList = jdbcTemplate.query(SQL_GET_ANCESTORS, this::mapRow, id, generations);
+
+    if (treeList.isEmpty()) {
+      throw new NotFoundException("No horse with ID: " + id + " found");
+    }
+
+    return treeList;
   }
 
   private Horse mapRow(ResultSet result, int rownum) throws SQLException {
