@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class HorseServiceImpl implements HorseService {
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(
         updatedHorse,
-        ownerMapForSingleId(updatedHorse.getOwnerId()),
+        ownerMapForHorseFamilie(updatedHorse, mother, father),
         father,
         mother
     );
@@ -121,7 +122,7 @@ public class HorseServiceImpl implements HorseService {
 
     return mapper.entityToDetailDto(
         horse,
-        ownerMapForSingleId(horse.getOwnerId()),
+        ownerMapForHorseFamilie(horse, mother, father),
         father,
         mother);
   }
@@ -141,7 +142,7 @@ public class HorseServiceImpl implements HorseService {
 
     return mapper.entityToDetailDto(
         horse,
-        ownerMapForSingleId(horse.getOwnerId()),
+        ownerMapForHorseFamilie(horse, mother, father),
         father,
         mother);
   }
@@ -160,6 +161,30 @@ public class HorseServiceImpl implements HorseService {
           : Collections.singletonMap(ownerId, ownerService.getById(ownerId));
     } catch (NotFoundException e) {
       throw new FatalException("Owner %d referenced by horse not found".formatted(ownerId));
+    }
+  }
+
+  private Map<Long, OwnerDto> ownerMapForHorseFamilie(Horse child, Horse father, Horse mother) {
+    List<Long> ids = new ArrayList<>();
+    if (child != null && child.getOwnerId() != null) {
+      ids.add(child.getOwnerId());
+    }
+    if (father != null && father.getOwnerId() != null) {
+      ids.add(father.getOwnerId());
+    }
+    if (mother != null && mother.getOwnerId() != null) {
+      ids.add(mother.getOwnerId());
+    }
+    try {
+      return ids.isEmpty()
+          ? null
+          : ownerService.getAllById(ids);
+    } catch (NotFoundException e) {
+      StringBuilder idsString = new StringBuilder("|");
+      for (Long id : ids) {
+        idsString.append(id.toString()).append("|");
+      }
+      throw new FatalException("one or more owners referenced by horse or its parents not found with ids: %s".formatted(idsString.toString()));
     }
   }
 
