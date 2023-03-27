@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {Horse, HorseTree} from "../../../dto/horse";
 import {Sex} from "../../../dto/sex";
 import {HorseService} from "../../../service/horse.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {Observable} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
 
+@Injectable()
 @Component({
   selector: 'app-horse-tree',
   templateUrl: './horse-tree.component.html',
@@ -31,7 +33,7 @@ export class HorseTreeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe(() => {
       const horseId = Number(this.route.snapshot.paramMap.get('id'));
 
       if (Number.isNaN(horseId)) {
@@ -62,4 +64,19 @@ export class HorseTreeComponent implements OnInit {
     }
     this.horseTree$ = this.horseService.getTree(this.id, this.generations)
   }
+
+  public delete(id: number){
+    this.horseService.delete(id).subscribe({
+      next: () => {
+        this.loadTree();
+        this.notification.info('Horse was deleted successfully');
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.notification.error(`Error while deleting horse: ${errorResponse.error.errors}`)
+        console.error(`ERROR while deleting horse with id: ${id}`, errorResponse.error.errors)
+      }
+    });
+  }
+
+
 }
