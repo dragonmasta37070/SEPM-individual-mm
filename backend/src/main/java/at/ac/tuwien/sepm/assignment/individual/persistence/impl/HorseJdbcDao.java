@@ -39,7 +39,7 @@ public class HorseJdbcDao implements HorseDao {
       + "  , father_id = ?"
       + "  , mother_id = ?"
       + " WHERE id = ?";
-
+  private static final String SQL_GET_CHILDREN = "SELECT * FROM " + TABLE_NAME + " WHERE father_id = ? OR mother_id = ?";
   private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME
       + " (name, description, date_of_birth, sex, owner_id, father_id, mother_id)"
       + " VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -182,8 +182,14 @@ public class HorseJdbcDao implements HorseDao {
   }
 
   @Override
+  public List<Horse> getChildren(long id) {
+    LOG.trace("getChildren ({})", id);
+    return jdbcTemplate.query(SQL_GET_CHILDREN, this::mapRow, id, id);
+  }
+
+  @Override
   public void delete(long id) throws NotFoundException, FatalException {
-    LOG.trace("delete ({})");
+    LOG.trace("delete:({})", id);
     int updated = jdbcTemplate.update(SQL_DELETE, id);
 
     if (updated == 0) {

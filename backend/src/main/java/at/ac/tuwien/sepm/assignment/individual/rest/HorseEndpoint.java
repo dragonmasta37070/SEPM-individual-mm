@@ -105,12 +105,16 @@ public class HorseEndpoint {
   @GetMapping("tree/{id}")
   public HorseTreeDto geTree(@PathVariable Long id, @RequestParam(name = "generations") Long generations)
       throws NotFoundException {
-    LOG.info("GET" + BASE_PATH + "/{}?generations=", id, generations);
+    LOG.info("GET" + BASE_PATH + "/{}?generations={}", id, generations);
     try {
       return service.getTree(id, generations);
     } catch (NotFoundException e) {
       HttpStatus status = HttpStatus.NOT_FOUND;
       logClientError(status, "Horse to get tree from not found", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
+    } catch (ValidationException e) {
+      HttpStatus status = HttpStatus.BAD_REQUEST;
+      logClientError(status, "Invalid input for generations", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }

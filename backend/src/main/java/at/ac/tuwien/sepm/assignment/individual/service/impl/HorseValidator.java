@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class HorseValidator extends BaseValidator {
@@ -28,9 +30,11 @@ public class HorseValidator extends BaseValidator {
   public void validateForUpdate(HorseDetailDto horse) throws ValidationException, ConflictException {
     LOG.trace("validateForUpdate({})", horse);
     List<String> validationErrors = new ArrayList<>();
-    // TODO: validate on gender change if still valid
     if (horse.id() == null) {
       validationErrors.add("No ID given");
+    }
+    if (Objects.equals(horse.id(), horse.fatherId()) || Objects.equals(horse.id(), horse.motherId())) {
+      validationErrors.add("Cant reference itself as parent");
     }
 
     validateString(validationErrors, horse.name(), 255, "Horse name", false);
@@ -62,6 +66,21 @@ public class HorseValidator extends BaseValidator {
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for create failed", validationErrors);
+    }
+  }
+
+  /**
+   * validates that horse does not have children
+   *
+   * @param horseName   name of Horse
+   * @param hasChildren true if horse has children
+   */
+  public void validateChildren(String horseName, boolean hasChildren) throws ValidationException {
+    LOG.trace("validateChildren: ({}, {})", horseName, hasChildren);
+
+    if (hasChildren) {
+      throw new ValidationException("Validation of horse for update failed",
+          Collections.singletonList(horseName + " is a parent. Sex can't be"));
     }
   }
 
@@ -111,11 +130,11 @@ public class HorseValidator extends BaseValidator {
     }
   }
 
-  public void validateForTree(Long id, Long generations) {
+  public void validateForTree(Long id, Long generations) throws ValidationException {
     LOG.trace("validateForTree ({}, {})", id, generations);
-    List<String> validationErrors = new ArrayList<>();
     if (generations < 1) {
-      validationErrors.add("Generations cant be smaller than 1");
+      throw new ValidationException("Validation of generations for family-tree failed",
+          Collections.singletonList("Generations cant be smaller than 1"));
     }
   }
 }

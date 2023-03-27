@@ -5,10 +5,12 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseTreeDto;
+import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -36,6 +38,13 @@ public interface HorseService {
    */
   HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException;
 
+  /**
+   * get a list the of Horses which reference the horse with the given id
+   *
+   * @param id id of the parent of wich the children are retrieved
+   * @return a list of children of the Horse
+   */
+  List<Horse> getChildren(long id);
 
   /**
    * Get the horse with given ID, with more detail information.
@@ -77,9 +86,9 @@ public interface HorseService {
   /**
    * get a tree representation of horses and there parents
    *
-   * @param id root horse
+   * @param id          root horse
    * @param generations number of generations listed
    * @return a tree of horses
    */
-  HorseTreeDto getTree(Long id, Long generations) throws NotFoundException;
+  HorseTreeDto getTree(Long id, Long generations) throws NotFoundException, ValidationException;
 }

@@ -57,7 +57,7 @@ public class HorseServiceImpl implements HorseService {
   }
 
   @Override
-  public HorseTreeDto getTree(Long id, Long generations) throws NotFoundException {
+  public HorseTreeDto getTree(Long id, Long generations) throws NotFoundException, ValidationException {
     LOG.trace("searchHorses({},{})", id, generations);
     validator.validateForTree(id, generations);
 
@@ -84,8 +84,17 @@ public class HorseServiceImpl implements HorseService {
   public HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException {
     LOG.trace("update({})", horse);
 
-    Horse father = horse.father() == null ? null : dao.getById(horse.father().id());
-    Horse mother = horse.mother() == null ? null : dao.getById(horse.mother().id());
+    Horse father = null;
+    if (horse.father() != null) {
+      father = dao.getById(horse.fatherId());
+      validator.validateChildren(father.getName(), dao.getChildren(father.getId()).size() > 0);
+    }
+
+    Horse mother = null;
+    if (horse.mother() != null) {
+      mother = dao.getById(horse.motherId());
+      validator.validateChildren(mother.getName(), dao.getChildren(mother.getId()).size() > 0);
+    }
 
     validator.validateForUpdate(horse);
     var updatedHorse = dao.update(horse);
@@ -95,6 +104,11 @@ public class HorseServiceImpl implements HorseService {
         father,
         mother
     );
+  }
+
+  @Override
+  public List<Horse> getChildren(long id) {
+    return dao.getChildren(id);
   }
 
   @Override
