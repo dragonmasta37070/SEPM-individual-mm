@@ -59,7 +59,7 @@
         Owner
       </div>
       <div class="col-form-label col-md-10 col-lg-8">
-        {{horse.owner.firstName}} {{horse.owner.lastName}}
+        {{horse.owner?.firstName}} {{horse.owner?.lastName}}
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@
         Mother
       </div>
       <div class="col-form-label col-md-10 col-lg-8">
-        {{horse.mother.name}}
+        {{horse.mother?.name}}
       </div>
     </div>
   </div>
@@ -85,7 +85,7 @@
         Father
       </div>
       <div class="col-form-label col-md-10 col-lg-8">
-        {{horse.father.name}}
+        {{horse.father?.name}}
       </div>
     </div>
   </div>

@@ -110,8 +110,8 @@ export class HorseCreateEditComponent implements OnInit {
             this.horse = horse;
           },
           error: (errorResponse: HttpErrorResponse) => {
-            console.error('ERROR: No horse found with id:', horseId);
-            this.notification.error(`Could not find horse to edit`);
+            console.error(`ERROR: No horse found:, ${errorResponse.error.errors}`);
+            this.notification.error(`Could not find horse to edit with id: ${horseId}`);
             this.routToRoot();
           }
         });
@@ -159,7 +159,7 @@ export class HorseCreateEditComponent implements OnInit {
           return;
       }
       observable.subscribe({
-        next: data => {
+        next: () => {
           this.notification.success(`Horse ${this.horse.name} successfully ${this.modeActionFinished}.`);
           this.routToRoot();
         },

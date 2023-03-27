@@ -32,7 +32,7 @@ export class HorseDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe(() => {
       const horseId = Number(this.route.snapshot.paramMap.get('id'));
 
       if (Number.isNaN(horseId)) {
@@ -47,8 +47,8 @@ export class HorseDetailComponent implements OnInit {
           this.horse = horse;
         },
         error: (errorResponse: HttpErrorResponse) => {
-          console.error('ERROR: No horse found with id:', horseId);
-          this.notification.error(`Could not find horse to edit`);
+          console.error(`ERROR: No horse found:, ${errorResponse.error.errors}`);
+          this.notification.error(`Could not find horse to edit with id: ${horseId}`);
           this.routToRoot();
         }
       });
