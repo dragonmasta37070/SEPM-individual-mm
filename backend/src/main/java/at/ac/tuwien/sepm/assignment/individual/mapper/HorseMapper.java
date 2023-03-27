@@ -88,12 +88,15 @@ public class HorseMapper {
     return owner;
   }
 
-  public HorseTreeDto convertListToTree(List<Horse> tree, Horse child) {
-    Horse father = tree.stream().filter(h -> h.getId() == child.getFatherId()).findFirst().orElse(null);
-    Horse mother = tree.stream().filter(h -> h.getId() == child.getMotherId()).findFirst().orElse(null);
+  public HorseTreeDto convertListToTree(List<Horse> tree, Horse child, long generation) {
+    if (generation <= 0) {
+      return null;
+    }
+    Horse father = tree.stream().filter(h -> h.getId().equals(child.getFatherId())).findFirst().orElse(null);
+    Horse mother = tree.stream().filter(h -> h.getId().equals(child.getMotherId())).findFirst().orElse(null);
 
-    HorseTreeDto fatherDto = father == null ? null : convertListToTree(tree, father);
-    HorseTreeDto motherDto = mother == null ? null : convertListToTree(tree, mother);
+    HorseTreeDto fatherDto = father == null ? null : convertListToTree(tree, father, generation - 1);
+    HorseTreeDto motherDto = mother == null ? null : convertListToTree(tree, mother, generation - 1);
 
     return new HorseTreeDto(child.getId(), child.getName(), child.getDateOfBirth(), child.getSex(), fatherDto, motherDto);
   }

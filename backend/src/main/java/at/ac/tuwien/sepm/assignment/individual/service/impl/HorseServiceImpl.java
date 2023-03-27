@@ -62,7 +62,7 @@ public class HorseServiceImpl implements HorseService {
     validator.validateForTree(id, generations);
 
     var tree = dao.getTreeAsList(id, generations);
-    return mapper.convertListToTree(tree, tree.get(0));
+    return mapper.convertListToTree(tree, tree.get(0), generations);
   }
 
   private Stream<HorseListDto> getHorseListDtoStream(List<Horse> horses) {
@@ -114,7 +114,7 @@ public class HorseServiceImpl implements HorseService {
 
   @Override
   public HorseDetailDto create(HorseCreateDto horseToCreate) throws ValidationException, NotFoundException {
-    LOG.trace("create{()}", horseToCreate);
+    LOG.trace("create({})", horseToCreate);
 
     Horse father = horseToCreate.father() == null ? null : dao.getById(horseToCreate.father().id());
     Horse mother = horseToCreate.mother() == null ? null : dao.getById(horseToCreate.mother().id());
@@ -134,7 +134,7 @@ public class HorseServiceImpl implements HorseService {
 
   @Override
   public void delete(Long id) throws NotFoundException {
-    LOG.trace("delete{()}", id);
+    LOG.trace("delete({})", id);
 
     dao.delete(id);
   }

@@ -24,8 +24,8 @@ VALUES (-5, 'Trick', 'thierd child of Tobisch and Wendy', '2021-01-01', 'FEMALE'
 INSERT INTO horse (id, name, description, date_of_birth, sex, father_id, mother_id)
 VALUES (-6, 'Track', 'fourth child of Tobisch and Wendy', '2021-02-02', 'FEMALE', -2, -1)
 ;
-INSERT INTO horse (id, name, description, date_of_birth, sex, mother_id)
-VALUES (-7, 'Peter', 'child of Wendisch', '2020-12-12', 'FEMALE', -3)
+INSERT INTO horse (id, name, description, date_of_birth, sex, father_id, mother_id)
+VALUES (-7, 'Peter', 'child of Wendisch', '2020-12-12', 'FEMALE', -2, -3)
 ;
 
 DELETE
