@@ -86,18 +86,19 @@ public class HorseServiceImpl implements HorseService {
     LOG.trace("update({})", horse);
 
     Horse father = null;
-    if (horse.father() != null) {
+    if (horse.father() != null && horse.fatherId() != null) {
       father = dao.getById(horse.fatherId());
-      validator.validateChildren(father.getName(), dao.getChildren(father.getId()).size() > 0);
     }
 
     Horse mother = null;
-    if (horse.mother() != null) {
+    if (horse.mother() != null && horse.motherId() != null) {
       mother = dao.getById(horse.motherId());
-      validator.validateChildren(mother.getName(), dao.getChildren(mother.getId()).size() > 0);
     }
 
     validator.validateForUpdate(horse);
+    if (horse.sex() != dao.getById(horse.id()).getSex()) {
+      validator.validateChildren(horse.name(), dao.getChildren(horse.id()).size() > 0);
+    }
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(
         updatedHorse,
