@@ -6,7 +6,7 @@ FROM owner
 where id < 0;
 
 INSERT INTO owner (id, FIRST_NAME, LAST_NAME, EMAIL)
-VALUES (-1, 'Eragon', 'Schattentöter', 'erscha@gmail.com'),
+VALUES (-1, 'Eragon', 'Schattentoeter', 'erscha@gmail.com'),
        (-2, 'Enekin', 'Skywalker', 'lowground@imperium.com'),
        (-3, 'Obiwan', 'Kenobus', 'highground@imperium.com'),
        (-4, 'Naruto', 'Uzumaki', 'naruto.uzumaki@leafvillage.com'),
@@ -46,12 +46,12 @@ VALUES (-1, 'Wendy', 'The famous one!', '2012-12-12', 'FEMALE', -12, NULL, NULL)
        (-7, 'Peter', 'child of Wendisch', '2020-12-12', 'FEMALE', NULL, -2, -3),
        (-8, 'Jedi', 'powerful force user', '1990-05-25', 'MALE', NULL, NULL, NULL),
        (-9, 'Sith', 'dark side force user', '1990-05-25', 'FEMALE', -4, NULL, NULL),
-       (-10, 'Padmé Amidala', 'Queen of Naboo and mother of Luke and Leia', '2020-04-06', 'FEMALE', NULL, NULL, NULL),
+       (-10, 'Padme Amidala', 'Queen of Naboo and mother of Luke and Leia', '2020-04-06', 'FEMALE', NULL, NULL, NULL),
        (-11, 'Jango Fett', 'Mandalorian bounty hunter and father of Boba Fett', '2020-04-06', 'MALE', NULL, -2, -1),
        (-12, 'Boba Fett', 'Mandalorian bounty hunter', '2020-04-06', 'MALE', -4, -11, -10),
        (-13, 'Anakin Skywalker', 'Jedi Knight who became Darth Vader', '2020-04-010', 'MALE', NULL, -12, NULL),
-       (-14, 'Luke', 'son of Anakin Skywalker and Padmé Amidala', '2000-07-16', 'MALE', -4, -13, -10),
-       (-15, 'Leia', 'daughter of Anakin Skywalker and Padmé Amidala', '2000-07-16', 'FEMALE', NULL, -13, -10),
+       (-14, 'Luke', 'son of Anakin Skywalker and Padme Amidala', '2000-07-16', 'MALE', -4, -13, -10),
+       (-15, 'Leia', 'daughter of Anakin Skywalker and Padme Amidala', '2000-07-16', 'FEMALE', NULL, -13, -10),
        (-16, 'Han', 'smuggler and pilot', '1990-05-25', 'MALE', -14, NULL, NULL),
        (-17, 'Chewbacca', 'Wookiee co-pilot of the Millennium Falcon', '1990-05-25', 'MALE', NULL, NULL, NULL),
        (-18, 'Darth Vader', 'Sith Lord and father of Luke and Leia', '1977-05-25', 'MALE', -2, NULL, NULL),
